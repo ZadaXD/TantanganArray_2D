@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/P2/AMIK.png">
+    <title>CRUD Array2D</title>
+    <style>
+        body {
+            background-image: url(/P2/102.jpg) !important;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="mx-auto p-4">
+        <div class="container-md">
+            <div class="row justify-content-center">
+                <div class="card">
+                    <div class="card-header">
+                        CRUD dengan Array 2D
+                    </div>
+                    <div class="card-body">
+                        <?php
+                        // Array 2D
+                        $buku = [
+                            ["id" => 1, "title" => "3726 MDPL", "author" => "NURWINA SARI"],
+                            ["id" => 2, "title" => "Bandung After Rain", "author" => "Wulan Nur Amalia"],
+                            ["id" => 3, "title" => "Buku A", "author" => "Penulis A"]
+                        ];
+
+                        // Fungsi untuk menambah buku
+                        function tambahBuku(&$buku, $judul, $penulis)
+                        {
+                            $id = end($buku)["id"] + 1;
+                            $buku[] = ["id" => $id, "title" => $judul, "author" => $penulis];
+                        }
+
+                        // Fungsi untuk mengupdate buku
+                        function editBuku(&$buku, $id, $judul, $penulis)
+                        {
+                            foreach ($buku as &$book) {
+                                if ($book["id"] == $id) {
+                                    $book["title"] = $judul;
+                                    $book["author"] = $penulis;
+                                    return;
+                                }
+                            }
+                        }
+
+                        // Fungsi untuk menghapus buku
+                        function hapusBuku(&$buku, $id)
+                        {
+                            foreach ($buku as $key => $book) {
+                                if ($book["id"] == $id) {
+                                    unset($buku[$key]);
+                                    return;
+                                }
+                            }
+                        }
+
+                        // Menangani request form
+                        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                            if (isset($_POST["add"])) {
+                                tambahBuku($buku, $_POST["title"], $_POST["author"]);
+                            } elseif (isset($_POST["update"])) {
+                                editBuku($buku, $_POST["id"], $_POST["title"], $_POST["author"]);
+                            } elseif (isset($_POST["delete"])) {
+                                hapusBuku($buku, $_POST["id"]);
+                            }
+                        }
+
+                        ?>
+
+                        <h5>Daftar Buku</h5>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>ID</th>
+                                <th>Judul</th>
+                                <th>Penulis</th>
+                            </tr>
+                            <?php foreach ($buku as $book): ?>
+                                <tr>
+                                    <td><?php echo $book["id"]; ?></td>
+                                    <td><?php echo $book["title"]; ?></td>
+                                    <td><?php echo $book["author"]; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </table>
+                        <center>
+                            <br>
+                            <hr>
+                            <h5>Tambah Buku</h5>
+                            <form method="post">
+                                <label for="title">Judul:</label><br>
+                                <input type="text" id="title" name="title" required><br><br>
+                                <label for="author">Penulis:</label><br>
+                                <input type="text" id="author" name="author" required><br><br>
+                                <input type="submit" name="add" value="Tambah" class="btn btn-outline-danger">
+                            </form>
+                            <br>
+                            <hr>
+                            <h5>Update Buku</h5>
+                            <form method="post">
+                                <label for="id">ID:</label><br>
+                                <input type="number" id="id" name="id" required><br><br>
+                                <label for="title">Judul Baru:</label><br>
+                                <input type="text" id="title" name="title" required><br><br>
+                                <label for="author">Penulis Baru:</label><br>
+                                <input type="text" id="author" name="author" required><br><br>
+                                <input type="submit" name="update" value="Update" class="btn btn-outline-danger">
+                            </form>
+                            <br>
+                            <hr>
+                            <h5>Hapus Buku</h5>
+                            <form method="post">
+                                <label for="id">ID:</label><br>
+                                <input type="number" id="id" name="id" required><br><br>
+                                <input type="submit" name="delete" value="Hapus" class="btn btn-outline-danger">
+                            </form>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+
+</html>
